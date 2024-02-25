@@ -1,7 +1,11 @@
-[gd_scene load_steps=19 format=3 uid="uid://ddxq7couk800w"]
+[gd_scene load_steps=23 format=3 uid="uid://ddxq7couk800w"]
 
-[ext_resource type="Script" path="res://alpha 1.0/character a1.0.gd" id="1_ahs8v"]
 [ext_resource type="Texture2D" uid="uid://2esuh8vmcrtk" path="res://assets/Tiny Swords/Tiny Swords (Update 010)/Factions/Knights/Troops/Archer/Red/Archer_Red.png" id="1_rh252"]
+[ext_resource type="Texture2D" uid="uid://cj7t4vg7aitc1" path="res://assets/Tiny Swords/Tiny Swords (Update 010)/UI/Banners/Banner_Horizontal.png" id="2_241la"]
+[ext_resource type="Texture2D" uid="uid://c1ik415eutgfm" path="res://assets/Tiny Swords/Tiny Swords (Update 010)/UI/Pointers/03.png" id="3_wenv2"]
+[ext_resource type="Texture2D" uid="uid://cctr60s1hwh6p" path="res://assets/Tiny Swords/Tiny Swords (Update 010)/UI/Pointers/04.png" id="4_pmaea"]
+[ext_resource type="Texture2D" uid="uid://bivpb2cd6ya0h" path="res://assets/Tiny Swords/Tiny Swords (Update 010)/UI/Pointers/05.png" id="5_l4joy"]
+[ext_resource type="Texture2D" uid="uid://ci5otv74v17j4" path="res://assets/Tiny Swords/Tiny Swords (Update 010)/UI/Pointers/06.png" id="6_6ieer"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_i7voa"]
 atlas = ExtResource("1_rh252")
@@ -115,10 +119,9 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_q48mh"]
-size = Vector2(74, 76)
+size = Vector2(71, 76)
 
 [node name="Character" type="Node2D"]
-script = ExtResource("1_ahs8v")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_1jn7s")
@@ -130,4 +133,44 @@ frame_progress = 0.767199
 [node name="Area2D" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(3.5, 0)
 shape = SubResource("RectangleShape2D_q48mh")
+
+[node name="BannerHorizontal" type="Sprite2D" parent="."]
+position = Vector2(1, 46.5)
+scale = Vector2(0.541667, 0.223958)
+texture = ExtResource("2_241la")
+
+[node name="HP" type="Label" parent="."]
+offset_left = -9.0
+offset_top = 34.5
+offset_right = 10.0
+offset_bottom = 58.5
+scale = Vector2(1.01913, 0.962523)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "00"
+
+[node name="Selected" type="CanvasGroup" parent="."]
+visible = false
+
+[node name="03" type="Sprite2D" parent="Selected"]
+position = Vector2(-29, -34)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_wenv2")
+
+[node name="04" type="Sprite2D" parent="Selected"]
+position = Vector2(35, -34)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("4_pmaea")
+
+[node name="05" type="Sprite2D" parent="Selected"]
+position = Vector2(-29, 33)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("5_l4joy")
+
+[node name="06" type="Sprite2D" parent="Selected"]
+position = Vector2(35, 32)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("6_6ieer")
+
+[connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]

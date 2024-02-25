@@ -1,0 +1,167 @@
+[gd_scene load_steps=22 format=3 uid="uid://lx0bsqcw7xm6"]
+
+[ext_resource type="Texture2D" uid="uid://dvp6fjn7gwqmd" path="res://assets/Tiny Swords/Tiny Swords (Update 010)/Factions/Goblins/Troops/Torch/Purple/Torch_Purple.png" id="1_r426x"]
+[ext_resource type="Texture2D" uid="uid://cj7t4vg7aitc1" path="res://assets/Tiny Swords/Tiny Swords (Update 010)/UI/Banners/Banner_Horizontal.png" id="2_feobu"]
+[ext_resource type="Texture2D" uid="uid://c1ik415eutgfm" path="res://assets/Tiny Swords/Tiny Swords (Update 010)/UI/Pointers/03.png" id="3_gp7vf"]
+[ext_resource type="Texture2D" uid="uid://cctr60s1hwh6p" path="res://assets/Tiny Swords/Tiny Swords (Update 010)/UI/Pointers/04.png" id="4_xbpga"]
+[ext_resource type="Texture2D" uid="uid://bivpb2cd6ya0h" path="res://assets/Tiny Swords/Tiny Swords (Update 010)/UI/Pointers/05.png" id="5_3q5kb"]
+[ext_resource type="Texture2D" uid="uid://ci5otv74v17j4" path="res://assets/Tiny Swords/Tiny Swords (Update 010)/UI/Pointers/06.png" id="6_te22a"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t8l7k"]
+atlas = ExtResource("1_r426x")
+region = Rect2(0, 384, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cgjfh"]
+atlas = ExtResource("1_r426x")
+region = Rect2(192, 384, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_j1b1h"]
+atlas = ExtResource("1_r426x")
+region = Rect2(384, 384, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6fpci"]
+atlas = ExtResource("1_r426x")
+region = Rect2(576, 384, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o3qha"]
+atlas = ExtResource("1_r426x")
+region = Rect2(768, 384, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xdmj3"]
+atlas = ExtResource("1_r426x")
+region = Rect2(960, 384, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xspic"]
+atlas = ExtResource("1_r426x")
+region = Rect2(0, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s72px"]
+atlas = ExtResource("1_r426x")
+region = Rect2(192, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g6jew"]
+atlas = ExtResource("1_r426x")
+region = Rect2(384, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ae48x"]
+atlas = ExtResource("1_r426x")
+region = Rect2(576, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_roovj"]
+atlas = ExtResource("1_r426x")
+region = Rect2(768, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a6t68"]
+atlas = ExtResource("1_r426x")
+region = Rect2(960, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rjxxn"]
+atlas = ExtResource("1_r426x")
+region = Rect2(1152, 0, 192, 192)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ht06j"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t8l7k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cgjfh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_j1b1h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6fpci")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o3qha")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xdmj3")
+}],
+"loop": true,
+"name": &"Attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xspic")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s72px")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g6jew")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ae48x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_roovj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a6t68")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rjxxn")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 10.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gpihr"]
+size = Vector2(74, 76)
+
+[node name="Enemy" type="Node2D"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_ht06j")
+animation = &"Idle"
+autoplay = "Idle"
+frame = 1
+frame_progress = 0.883989
+flip_h = true
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_gpihr")
+
+[node name="BannerHorizontal" type="Sprite2D" parent="."]
+position = Vector2(1, 47.5)
+scale = Vector2(0.541667, 0.223958)
+texture = ExtResource("2_feobu")
+
+[node name="HP" type="Label" parent="."]
+offset_left = -9.0
+offset_top = 35.5
+offset_right = 10.0
+offset_bottom = 59.5
+scale = Vector2(1.01913, 0.962523)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "00"
+
+[node name="Selected" type="CanvasGroup" parent="."]
+visible = false
+
+[node name="03" type="Sprite2D" parent="Selected"]
+position = Vector2(-32, -32)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("3_gp7vf")
+
+[node name="04" type="Sprite2D" parent="Selected"]
+position = Vector2(31, -32)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("4_xbpga")
+
+[node name="05" type="Sprite2D" parent="Selected"]
+position = Vector2(-32, 32)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("5_3q5kb")
+
+[node name="06" type="Sprite2D" parent="Selected"]
+position = Vector2(32, 32)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("6_te22a")
