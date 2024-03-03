@@ -4,76 +4,35 @@ const CHARACTER_OFFSET_FROM_CENTER: int = 100;
 const C1_PRELOAD = preload("res://alpha 1.0/character a1.0.tscn");
 const E1_PRELOAD = preload("res://alpha 1.0/enemy a1.0.tscn");
 
+const ArcherRedAnimatedSprite = preload("res://archer_red_animated_sprite.tscn");
+const ArcherBlueAnimatedSprite = preload("res://archer_blue_animated_sprite.tscn");
+const ArcherPurpleAnimatedSprite = preload("res://archer_purple_animated_sprite.tscn");
+
+const Character = preload("res://alpha 1.0/character a1.0.gd");
+const Enemy = preload("res://alpha 1.0/enemy a1.0.gd");
+
 const CharacterPreloads = [C1_PRELOAD, E1_PRELOAD];
 
-var characters = [
-	{
-		"resourceId": 0,
-		"name": "C1",
-		"atk": 10,
-		"hp": 50,
-		"def": 20,
-		"mp": 0,
-		"agi": 5
-	},
-	{
-		"resourceId": 0,
-		"name": "C2",
-		"atk": 10,
-		"hp": 50,
-		"def": 20,
-		"mp": 0,
-		"agi": 5
-	},
-	{
-		"resourceId": 0,
-		"name": "C3",
-		"atk": 10,
-		"hp": 50,
-		"def": 20,
-		"mp": 0,
-		"agi": 5
-	}
+var characters: Array[Character] = [
+	Character.new(10, 0, 2, 50, 10, 0, ArcherRedAnimatedSprite.instantiate()),
+	Character.new(20, 0, 2, 10, 0, 1, ArcherBlueAnimatedSprite.instantiate()),
+	Character.new(5, 0, 3, 40, 2, 2, ArcherPurpleAnimatedSprite.instantiate())
 ];
 
 
-var enemies = [
-	{
-		"resourceId": 1,
-		"name": "E1",
-		"atk": 10,
-		"hp": 50,
-		"def": 20,
-		"mp": 0,
-		"agi": 5
-	},
-	{
-		"resourceId": 1,
-		"name": "E2",
-		"atk": 10,
-		"hp": 50,
-		"def": 20,
-		"mp": 0,
-		"agi": 5
-	},
-	{
-		"resourceId": 1,
-		"name": "E3",
-		"atk": 10,
-		"hp": 50,
-		"def": 20,
-		"mp": 0,
-		"agi": 5
-	}
+var enemies: Array[Enemy] = [
+	Enemy.new(10, 0, 1, 50, 10),
+	Enemy.new(20, 0, 1, 10, 0),
+	Enemy.new(5, 0, 3, 40, 2)
 ];
 
-var selectedCharacter = characters[0];
+var selectedCharacter = characters[2];
 var selectedEnemy = enemies[0];
 
 func _add_characters(centerPosition: Vector2):
 	var accumulatedCharacterWidth: int = 0;
 	for character in characters:
-		var node = self.CharacterPreloads[character["resourceId"]].instantiate();
+		var node = character.scenePreload.instantiate();
 		
 		# draw character
 		node.set_position(centerPosition + Vector2(-CHARACTER_OFFSET_FROM_CENTER - accumulatedCharacterWidth, 0));
@@ -81,28 +40,29 @@ func _add_characters(centerPosition: Vector2):
 		#add accumulated width
 		var shape = node.get_node("Area2D/CollisionShape2D");
 		accumulatedCharacterWidth += shape.shape.size.x * 2;
-		character["node"] = node;
+		character.node = node;
 		
 		# set hp
 		var hpLabelOnCharacter: Label = node.get_node("HP");
-		hpLabelOnCharacter.text = str(character["hp"]);
+		hpLabelOnCharacter.text = str(character.hp);
 		
 		# setup
 		var area2D: Area2D = node.get_node("Area2D")
 		area2D.input_event.connect(character_selected.bind(character));
+		character.setup();
 		self.get_parent().add_child(node);
 
 
 func _add_enemies(centerPosition: Vector2):
 	var accumulatedEnemyWidth: int = 0;
 	for enemy in enemies:
-		var node = self.CharacterPreloads[enemy["resourceId"]].instantiate();
+		var node = enemy.scenePreload.instantiate();
 		node.set_position(centerPosition + Vector2(CHARACTER_OFFSET_FROM_CENTER + accumulatedEnemyWidth, 0));
 		var shape = node.get_node("Area2D/CollisionShape2D");
 		accumulatedEnemyWidth += shape.shape.size.x * 2;
-		enemy["node"] = node;
+		enemy.node = node;
 		var hpLabelOnEnemy: Label = node.get_node("HP");
-		hpLabelOnEnemy.text = str(enemy["hp"]);
+		hpLabelOnEnemy.text = str(enemy.hp);
 		
 		var area2D: Area2D = node.get_node("Area2D")
 		area2D.input_event.connect(enemy_selected.bind(enemy));
@@ -113,39 +73,45 @@ func _add_enemies(centerPosition: Vector2):
 func character_selected(viewport: Node, event: InputEvent, shape_idx: int, character):
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_LEFT:
-			var prevSelected:CanvasGroup = selectedCharacter["node"].get_node("Selected");
+			var prevSelected:CanvasGroup = selectedCharacter.node.get_node("Selected");
 			prevSelected.visible = false;
 			selectedCharacter = character;
-			var selected:CanvasGroup = selectedCharacter["node"].get_node("Selected");
+			var selected:CanvasGroup = selectedCharacter.node.get_node("Selected");
 			selected.visible = true;
 			setSelectedCharacterProperties();
 
 func enemy_selected(viewport: Node, event: InputEvent, shape_idx: int, enemy):
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_LEFT:
-			var prevSelected:CanvasGroup = selectedEnemy["node"].get_node("Selected");
-			prevSelected.visible = false;
-			selectedEnemy = enemy;
-			var selected:CanvasGroup = selectedEnemy["node"].get_node("Selected");
-			selected.visible = true;
-			setSelectedEnemyProperties();
+			if selectedCharacter.isPreparingAttack:
+				selectedCharacter.attack(enemy);
+
+
+func selectCharacter(index: int):
+	var prevSelected:CanvasGroup = selectedCharacter.node.get_node("Selected");
+	prevSelected.visible = false;
+	selectedCharacter.cancelAttackPreparation();
+	selectedCharacter = characters[index];
+	var selected:CanvasGroup = selectedCharacter.node.get_node("Selected");
+	selected.visible = true;
+	setSelectedCharacterProperties();
 
 
 func setSelectedCharacterProperties():
-	$SelectedCharacterStats/HpValue.text = str(selectedCharacter["hp"]);
-	$SelectedCharacterStats/DefValue.text = str(selectedCharacter["def"]);
-	$SelectedCharacterStats/MpValue.text = str(selectedCharacter["mp"]);
-	$SelectedCharacterStats/AgiValue.text = str(selectedCharacter["agi"]);
-	$SelectedCharacterStats/AtkValue.text = str(selectedCharacter["atk"]);
+	$SelectedCharacterStats/HpValue.text = str(selectedCharacter.hp);
+	$SelectedCharacterStats/DefValue.text = str(selectedCharacter.def);
+	$SelectedCharacterStats/MpValue.text = str(selectedCharacter.mp);
+	$SelectedCharacterStats/AgiValue.text = str(selectedCharacter.agi);
+	$SelectedCharacterStats/AtkValue.text = str(selectedCharacter.atk);
 
 
 
 func setSelectedEnemyProperties():
-	$SelectedEnemyStats/HpValue.text = str(selectedEnemy["hp"]);
-	$SelectedEnemyStats/DefValue.text = str(selectedEnemy["def"]);
-	$SelectedEnemyStats/MpValue.text = str(selectedEnemy["mp"]);
-	$SelectedEnemyStats/AgiValue.text = str(selectedEnemy["agi"]);
-	$SelectedEnemyStats/AtkValue.text = str(selectedEnemy["atk"]);
+	$SelectedEnemyStats/HpValue.text = str(selectedEnemy.hp);
+	$SelectedEnemyStats/DefValue.text = str(selectedEnemy.def);
+	$SelectedEnemyStats/MpValue.text = str(selectedEnemy.mp);
+	$SelectedEnemyStats/AgiValue.text = str(selectedEnemy.agi);
+	$SelectedEnemyStats/AtkValue.text = str(selectedEnemy.atk);
 
 
 # Called when the node enters the scene tree for the first time.
@@ -153,6 +119,7 @@ func _ready():
 	var centerPosition: Vector2 = $BattleCenterPosition.global_position;
 	_add_characters(centerPosition);
 	_add_enemies(centerPosition);
+	selectCharacter(2)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -160,14 +127,28 @@ func _process(delta):
 	pass
 
 
-func _on_attack_button_pressed():
-	var animatedSprite :AnimatedSprite2D = selectedCharacter.node.get_node("AnimatedSprite2D");
-	animatedSprite.stop();
-	animatedSprite.animation_looped.connect(finish_attack.bind(selectedCharacter))
-	animatedSprite.play("Attack");
+func _input(event):
+	if event.is_action_pressed("change_character"):
+		var nextIndex = getNextCharacterIndex();
+		selectCharacter(nextIndex);
+	if event.is_action_pressed("ui_cancel"):
+		for child in characters:
+			self.get_parent().remove_child(child.node);
+		for child in enemies:
+			self.get_parent().remove_child(child.node);
+		get_tree().change_scene_to_file("res://main.tscn");
+	if event.is_action_pressed("first_attack"):
+		firstAttack();
+
+func getNextCharacterIndex():
+	var index = selectedCharacter.index;
+	var length = characters.size();
+	if index > 0:
+		return index - 1;
+	else:
+		return length - 1;
 
 
-func finish_attack(character):
-	var animatedSprite: AnimatedSprite2D = character.node.get_node("AnimatedSprite2D");
-	animatedSprite.animation_looped.disconnect(finish_attack)
-	animatedSprite.play("Idle");
+func firstAttack():
+	selectedCharacter.prepareAttack(0);
+

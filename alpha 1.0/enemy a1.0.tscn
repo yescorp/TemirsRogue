@@ -1,5 +1,6 @@
-[gd_scene load_steps=22 format=3 uid="uid://lx0bsqcw7xm6"]
+[gd_scene load_steps=23 format=3 uid="uid://lx0bsqcw7xm6"]
 
+[ext_resource type="Script" path="res://alpha 1.0/enemy a1.0.gd" id="1_4gsfy"]
 [ext_resource type="Texture2D" uid="uid://dvp6fjn7gwqmd" path="res://assets/Tiny Swords/Tiny Swords (Update 010)/Factions/Goblins/Troops/Torch/Purple/Torch_Purple.png" id="1_r426x"]
 [ext_resource type="Texture2D" uid="uid://cj7t4vg7aitc1" path="res://assets/Tiny Swords/Tiny Swords (Update 010)/UI/Banners/Banner_Horizontal.png" id="2_feobu"]
 [ext_resource type="Texture2D" uid="uid://c1ik415eutgfm" path="res://assets/Tiny Swords/Tiny Swords (Update 010)/UI/Pointers/03.png" id="3_gp7vf"]
@@ -115,6 +116,7 @@ animations = [{
 size = Vector2(74, 76)
 
 [node name="Enemy" type="Node2D"]
+script = ExtResource("1_4gsfy")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_ht06j")
@@ -125,6 +127,8 @@ frame_progress = 0.883989
 flip_h = true
 
 [node name="Area2D" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 shape = SubResource("RectangleShape2D_gpihr")

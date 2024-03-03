@@ -1,0 +1,38 @@
+[gd_scene load_steps=5 format=3 uid="uid://c8ubfv2q8et0u"]
+
+[ext_resource type="Texture2D" uid="uid://buohigp2y8h3i" path="res://assets/Tiny Swords/Tiny Swords (Update 010)/Factions/Knights/Troops/Archer/Arrow/Arrow.png" id="1_tikv3"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jgyla"]
+atlas = ExtResource("1_tikv3")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_a8ytg"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jgyla")
+}],
+"loop": true,
+"name": &"new_animation",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ku7j8"]
+size = Vector2(61, 6)
+
+[node name="Arrow" type="AnimatedSprite2D"]
+z_index = 100
+position = Vector2(10, 7)
+sprite_frames = SubResource("SpriteFrames_a8ytg")
+animation = &"new_animation"
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(1.5, 3)
+shape = SubResource("RectangleShape2D_ku7j8")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.05
