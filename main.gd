@@ -16,5 +16,10 @@ func _on_quit_pressed():
 
 
 func _on_test_pressed():
-	get_tree().change_scene_to_file("res://alpha 1.0/battle a1.0.tscn")
-	pass # Replace with function body.
+	var tree = get_tree();
+	tree.change_scene_to_file("res://alpha 1.0/battle a1.0.tscn")
+
+
+func _on_play_alpha_2_0_pressed():
+	var tree = get_tree();
+	tree.change_scene_to_file("res://alpha 2.0/batlle.tscn");
